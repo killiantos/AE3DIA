@@ -34,9 +34,12 @@ public class DemoTanker extends Tanker {
 	static Cell currentPosition = null;
 	static int currentX = 0;
 	static int currentY = 0;
+	Point p = null;
 	
 	public Action senseAndAct(Cell[][] view, long timestep) {
-
+		if(currentPosition == p){
+			flag = false;
+		}
 		currentPosition = getCurrentCell(view);
 		Calculator.senseAndAct(view, timestep);
 		
@@ -131,6 +134,7 @@ public class DemoTanker extends Tanker {
 			int tempx = 50, tempy = 50;
 			int chosenIndexX = 0, chosenIndexY = 0;
 			for (int counter = 0; counter < wellList.size(); counter++) {
+				//if(Math.abs(currentX - wellX.get(counter)) + Math.abs(wellX.get(counter)) <= getFuelLevel() || Math.abs(currentY - wellY.get(counter)) + Math.abs(wellY.get(counter)) <= getFuelLevel()){
 				if (Math.abs(currentX - wellX.get(counter)) < tempx) {
 					tempx = Math.abs(currentX - wellX.get(counter));
 					chosenIndexX = wellX.get(counter);
@@ -139,6 +143,7 @@ public class DemoTanker extends Tanker {
 					tempy = Math.abs(currentY - wellY.get(counter));
 					chosenIndexY = wellY.get(counter);
 				}
+			//}
 			}
 			if (tempy > tempx) {
 				p = wellList.get(chosenIndexX);
@@ -171,15 +176,18 @@ public class DemoTanker extends Tanker {
 			for (int counter = 0; counter < stationList.size(); counter++) {
 				Cell c = stationList.get(counter);
 				if (((Station) c).getTask() != null) {
-					if (Math.abs(currentX - stationX.get(counter)) < tempx) {
-						tempx = Math.abs(currentX - stationX.get(counter));
-						indexX = counter;
-						station = c.getPoint();
-					}
-					if (Math.abs(currentY - stationY.get(counter)) < tempy) {
-						tempy = Math.abs(currentY - stationY.get(counter));
-						indexY = counter;
-						station = c.getPoint();
+					if(Math.abs(currentX - stationX.get(counter)) + Math.abs(stationX.get(counter)) <= getFuelLevel() || Math.abs(currentY - stationY.get(counter)) + Math.abs(stationY.get(counter)) <= getFuelLevel()){
+						
+						if (Math.abs(currentX - stationX.get(counter)) < tempx) {
+							tempx = Math.abs(currentX - stationX.get(counter));
+							indexX = counter;
+							station = c.getPoint();
+						}
+						if (Math.abs(currentY - stationY.get(counter)) < tempy) {
+							tempy = Math.abs(currentY - stationY.get(counter));
+							indexY = counter;
+							station = c.getPoint();
+						}
 					}
 				}
 			}
@@ -213,10 +221,20 @@ public class DemoTanker extends Tanker {
 		}
 		
 		// Random Search
-		else{
+		
+		if(!(getCurrentCell(view) instanceof Station) && allStationList!= null && currentPosition!=p){
+		if(flag == false){
 		int move = (int) (Math.random() * allStationList.size());
-		Point p = allStationList.get(move).getPoint();
+		p = allStationList.get(move).getPoint();
+		flag = true;
+		}
 		return new MoveTowardsAction(p);
+		}
+		
+		
+		else{
+			int move = (int) (Math.random() * 8);
+			return new MoveAction(move);
 		}
 	}
 }

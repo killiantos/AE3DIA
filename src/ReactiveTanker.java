@@ -111,6 +111,7 @@ public class ReactiveTanker extends DemoTanker {
 			int tempx = 50, tempy = 50;
 			int chosenIndexX = 0, chosenIndexY = 0;
 			for (int counter = 0; counter < wellList.size(); counter++) {
+				//if(Math.abs(currentX - wellX.get(counter)) + Math.abs(wellX.get(counter)) <= getFuelLevel() || Math.abs(currentY - wellY.get(counter)) + Math.abs(wellY.get(counter)) <= getFuelLevel()){
 				if (Math.abs(currentX - wellX.get(counter)) < tempx) {
 					tempx = Math.abs(currentX - wellX.get(counter));
 					chosenIndexX = wellX.get(counter);
@@ -120,6 +121,7 @@ public class ReactiveTanker extends DemoTanker {
 					chosenIndexY = wellY.get(counter);
 				}
 			}
+			//}
 			if (tempy > tempx) {
 				p = wellList.get(chosenIndexX);
 			} else {
@@ -141,12 +143,14 @@ public class ReactiveTanker extends DemoTanker {
 			}
 			int i = 0;
 			for (Cell elem : stationList) {
+				if(Math.abs(currentX - stationX.get(i)) + Math.abs(stationX.get(i)) <= getFuelLevel() || Math.abs(currentY - stationY.get(i)) + Math.abs(stationY.get(i)) <= getFuelLevel()){
 				c = stationList.get(i);
 				station = c.getPoint();
 				if (DemoTanker.currentTask != station) {
 					break;
 				}
 				i++;
+			}
 			}
 
 			currentTask = station;
@@ -155,6 +159,16 @@ public class ReactiveTanker extends DemoTanker {
 
 		}
 		// Random Search
+		
+		if(!(getCurrentCell(view) instanceof Station) && allStationList!= null && currentPosition!=p){
+			if(flag == false){
+			int move = (int) (Math.random() * allStationList.size());
+			p = allStationList.get(move).getPoint();
+			flag = true;
+			}
+			return new MoveTowardsAction(p);
+			}
+		
 		else {
 			int move = (int) (Math.random() * allStationList.size());
 			Point p = allStationList.get(move).getPoint();

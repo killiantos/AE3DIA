@@ -62,13 +62,16 @@ public class DemoSimulator {
         
         // Create a GUI window to show our tanker
         TankerViewer tv = new TankerViewer(fleet);
-        tv.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+       tv.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         // Start executing the Tanker
         while (env.getTimestep()<(DURATION)) {
+        	if(env.getTimestep() % 99999 == 0){
+        		System.out.println(DemoTanker.getScore());
+        	}
             // Advance the environment timestep
             env.tick();
             // Update the GUI
-            tv.tick(env);
+           tv.tick(env);
             
             for (Tanker tank:fleet) {
                 // Get the current view of the tanker

@@ -66,7 +66,7 @@ public class Calculator {
 							DemoTanker.stationY.add(DemoTanker.currentY + j);
 						}
 
-						if (DemoTanker.stationList.contains(view[i][j]) || DemoTanker.bannedList.contains(view[i][j])) {
+						if (DemoTanker.stationList.contains(view[i][j]) || DemoTanker.allStationList.contains(view[i][j])) {
 							break;
 						}
 						else {
